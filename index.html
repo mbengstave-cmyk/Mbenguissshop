@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Bengis - Catalogue</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f9; color: #222; }
+  header { background: #111; color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { margin: 0; font-size: 24px; }
+  nav a { color: white; margin-left: 20px; text-decoration: none; cursor: pointer; }
+  .cart-count { background: #e94560; border-radius: 50%; padding: 2px 8px; font-size: 12px; margin-left: 5px; }
+  .products { display: flex; flex-wrap: wrap; gap: 20px; padding: 40px; justify-content: center; }
+  .card { background: white; border-radius: 10px; width: 220px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
+  .card img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+  .price { color: #e94560; font-weight: bold; font-size: 18px; }
+  .btn { background: #e94560; color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+  .cart-panel { position: fixed; right: -350px; top: 0; width: 320px; height: 100%; background: white; box-shadow: -2px 0 10px rgba(0,0,0,0.2); transition: right 0.3s; padding: 20px; overflow-y: auto; }
+  .cart-panel.open { right: 0; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+  .cart-total { font-weight: bold; font-size: 18px; margin-top: 20px; text-align: right; }
+  .remove-btn { color: #e94560; cursor: pointer; background: none; border: none; font-size: 14px; }
+  footer { text-align: center; padding: 20px; background: #111; color: white; margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Bengis</h1>
+  <nav>
+    <a>Accueil</a>
+    <a>Catalogue</a>
+    <a onclick="toggleCart()">Panier <span class="cart-count" id="cartCount">0</span></a>
+    <a>Contact</a>
+  </nav>
+</header>
+
+<section class="products" id="productList">
+  <div class="card" data-name="Coque MagSafe" data-price="19.99">
+    <img src="https://via.placeholder.com/180" alt="Produit">
+    <h3>Coque MagSafe</h3>
+    <p class="price">19,99 €</p>
+    <button class="btn" onclick="addToCart(this)">Ajouter au panier</button>
+  </div>
+  <div class="card" data-name="Chargeur sans fil" data-price="24.99">
+    <img src="https://via.placeholder.com/180" alt="Produit">
+    <h3>Chargeur sans fil</h3>
+    <p class="price">24,99 €</p>
+    <button class="btn" onclick="addToCart(this)">Ajouter au panier</button>
+  </div>
+  <div class="card" data-name="Écouteurs Bluetooth" data-price="39.99">
+    <img src="https://via.placeholder.com/180" alt="Produit">
+    <h3>Écouteurs Bluetooth</h3>
+    <p class="price">39,99 €</p>
+    <button class="btn" onclick="addToCart(this)">Ajouter au panier</button>
+  </div>
+  <div class="card" data-name="Support de téléphone" data-price="14.99">
+    <img src="https://via.placeholder.com/180" alt="Produit">
+    <h3>Support de téléphone</h3>
+    <p class="price">14,99 €</p>
