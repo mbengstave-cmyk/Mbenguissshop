@@ -1,42 +1,42 @@
-import express from 'express';
-import Stripe from 'stripe';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+// Importation des modules nécessaires
+const express = require('express');
 const app = express();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Charger les variables d'environnement depuis le fichier .env
+require('dotenv').config();
+
+// Initialiser Stripe avec la clé secrète lue de manière sécurisée dans l'environnement
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Middleware pour parser le JSON
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/create-checkout-session', async (req, res) => {
-  const items = req.body.items;
-
-  const line_items = items.map(item => ({
-    price_data: {
-      currency: 'eur',
-      product_data: { name: item.name },
-      unit_amount: Math.round(item.price * 100),
-    },
-    quantity: item.qty,
-  }));
-
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: line_items,
-    mode: 'payment',
-    success_url: 'https://tonsite.onrender.com/success',
-    cancel_url: 'https://tonsite.onrender.com/cancel',
-  });
-
-  res.json({ id: session.id });
+// Route de test pour vérifier que le serveur tourne
+app.get('/', (req, res) => {
+  res.send('Serveur opérationnel et sécurisé !');
 });
 
+// Exemple de route pour créer une session de paiement Stripe
+app.post('/create-payment-intent', async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    // Création d'un PaymentIntent avec Stripe
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount, // Le montant en centimes
+      currency: 'eur',
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Démarrage du serveur
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur le port ${PORT}`);
+});
